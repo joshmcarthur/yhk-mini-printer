@@ -79,15 +79,63 @@ button:disabled {
   font-weight: 600;
 }
 
+.header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.github-link {
+  flex-shrink: 0;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  color: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.github-link:hover {
+  background: #ffffff;
+}
+
 .preview-section,
-.log-section {
+.log-section,
+.demo-section {
   margin-top: 1.75rem;
 }
 
 .preview-section h2,
-.log-section h2 {
+.log-section h2,
+.demo-section h2 {
   margin: 0 0 0.75rem;
   font-size: 1rem;
+}
+
+.demo-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.demo-item {
+  margin: 0;
+}
+
+.demo-item figcaption {
+  margin-bottom: 0.5rem;
+  color: #52525b;
+  font-size: 0.875rem;
+}
+
+.demo-item video {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.5rem;
+  background: #000000;
 }
 
 #preview {
@@ -119,8 +167,17 @@ button:disabled {
     background-color: #09090b;
   }
 
-  .subtitle {
+  .subtitle,
+  .demo-item figcaption {
     color: #a1a1aa;
+  }
+
+  .github-link {
+    border-color: #3f3f46;
+  }
+
+  .github-link:hover {
+    background: #18181b;
   }
 
   button {
@@ -143,8 +200,13 @@ button:disabled {
   }
 
   #preview,
-  #log {
+  #log,
+  .demo-item video {
     background: #18181b;
     border-color: #3f3f46;
+  }
+
+  .demo-item video {
+    background: #000000;
   }
 }

@@ -9,8 +9,20 @@
   <body>
     <main class="app">
       <header>
-        <h1>YHK Mini Printer</h1>
-        <p class="subtitle">Phase 1 — Web Bluetooth proof of concept</p>
+        <div class="header-row">
+          <div>
+            <h1>YHK Mini Printer</h1>
+            <p class="subtitle">Phase 1 — Web Bluetooth proof of concept</p>
+          </div>
+          <a
+            class="github-link"
+            href="https://github.com/joshmcarthur/yhk-mini-printer"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+        </div>
       </header>
 
       <section class="actions">
@@ -29,6 +41,20 @@
       <section class="log-section">
         <h2>Status</h2>
         <pre id="log" aria-live="polite"></pre>
+      </section>
+
+      <section class="demo-section">
+        <h2>Demo</h2>
+        <div class="demo-grid">
+          <figure class="demo-item">
+            <figcaption>Web app — connect and print</figcaption>
+            <video src="./docs/images/screen-record.webm" controls playsinline></video>
+          </figure>
+          <figure class="demo-item">
+            <figcaption>Printer output — test image on paper</figcaption>
+            <video src="./docs/images/demo.webm" controls playsinline></video>
+          </figure>
+        </div>
       </section>
     </main>
     <script type="module" src="/src/main.ts"></script>

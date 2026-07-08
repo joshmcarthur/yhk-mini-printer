@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build:pages": "BASE_PATH=/yhk-mini-printer/ npm run build",
+    "preview": "vite preview",
+    "preview:pages": "BASE_PATH=/yhk-mini-printer/ vite preview"
   },
   "devDependencies": {
     "@types/web-bluetooth": "^0.0.21",

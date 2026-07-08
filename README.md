@@ -2,6 +2,8 @@
 
 Browser-based control for cheap BLE mini thermal printers. Connect over Web Bluetooth from Chrome and print raster images using ESC/POS (`GS v 0`) commands.
 
+**Live demo:** [joshmcarthur.github.io/yhk-mini-printer](https://joshmcarthur.github.io/yhk-mini-printer/) (requires Chrome/Edge — Web Bluetooth needs HTTPS)
+
 In theory, any pocket thermal printer that accepts **rasterized bytes over BLE** via an ISSC-style UART service should work. Compatibility depends on the BLE GATT profile and whether the firmware accepts ESC/POS bitmap commands (many cheap "cat printer" class devices do).
 
 **Status:** Phase 1 proof of concept — protocol validated from the browser. Long-term target is a [Pi print server](docs/architecture.md) for iOS, remote printing, and webhooks.
@@ -85,9 +87,12 @@ src/
 ## Build
 
 ```bash
-npm run build    # typecheck + dist/
-npm run preview  # serve production build
+npm run build          # local build (base /)
+npm run build:pages    # GitHub Pages build (base /yhk-mini-printer/)
+npm run preview        # serve production build locally
 ```
+
+Deploys to GitHub Pages automatically on push to `main` via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
 ## Troubleshooting
 
