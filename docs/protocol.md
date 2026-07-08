@@ -2,10 +2,13 @@
 
 ## Hardware
 
-- **Device:** YHK-962D mini thermal printer (and compatible YHK-* models)
+This project targets **cheap BLE pocket thermal printers** that accept ESC/POS raster over an ISSC Transparent UART GATT service. The primary tested device is the [Kmart Thermal Bluetooth Printer](https://www.kmart.co.nz/product/thermal-bluetooth-printer-43437771/) (SKU 43437771), which advertises as `YHK-*` and matches the YHK-962D class.
+
 - **Transport:** Bluetooth Low Energy, ISSC Transparent UART service
 - **Print language:** ESC/POS raster (`GS v 0`)
 - **Head width:** 384 dots (48 bytes per row) — standard 58mm thermal
+
+See [README — Supported devices](../README.md#supported-devices) for the full compatibility table.
 
 ## BLE GATT profile
 

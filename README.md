@@ -1,8 +1,46 @@
 # YHK Mini Printer
 
-Browser-based control for YHK-series mini thermal printers (e.g. YHK-962D). Connect over Web Bluetooth from Chrome, print a test image using ESC/POS raster commands.
+Browser-based control for cheap BLE mini thermal printers. Connect over Web Bluetooth from Chrome and print raster images using ESC/POS (`GS v 0`) commands.
+
+In theory, any pocket thermal printer that accepts **rasterized bytes over BLE** via an ISSC-style UART service should work. Compatibility depends on the BLE GATT profile and whether the firmware accepts ESC/POS bitmap commands (many cheap "cat printer" class devices do).
 
 **Status:** Phase 1 proof of concept — protocol validated from the browser. Long-term target is a [Pi print server](docs/architecture.md) for iOS, remote printing, and webhooks.
+
+![Kmart Thermal Bluetooth Printer (model 43437771)](docs/images/kmart-43437771.png)
+
+## Demo
+
+**Web app** — connect and print from Chrome:
+
+<video src="docs/images/screen-record.webm" controls width="720">
+  <a href="docs/images/screen-record.webm">Download screen recording</a>
+</video>
+
+**Printer output** — test image on paper:
+
+<video src="docs/images/demo.webm" controls width="720">
+  <a href="docs/images/demo.webm">Download demo video</a>
+</video>
+
+## Supported devices
+
+| Device | BLE name | BLE profile | ESC/POS raster | Status | Notes |
+|--------|----------|-------------|----------------|--------|-------|
+| [Kmart Thermal Bluetooth Printer](https://www.kmart.co.nz/product/thermal-bluetooth-printer-43437771/) (SKU 43437771) | `YHK-*` | ISSC UART | `GS v 0` | **Tested** | Primary dev device; 58mm head, ~384 dots wide |
+| YHK-962D | `YHK-*` | ISSC UART | `GS v 0` | **Tested** | Same class of printer as above |
+
+### Compatibility criteria
+
+A printer is likely compatible if it meets all of:
+
+1. **BLE peripheral** with a UART-like GATT service (ISSC `49535343-…` is common on this hardware).
+2. **Writable TX characteristic** supporting `writeWithoutResponse`.
+3. **ESC/POS raster** — accepts `GS v 0` (`1D 76 30 00`) bitmap data; text commands may not work.
+4. **~384 dot print width** (48 bytes/row) for 58mm paper — adjust image width if your model differs.
+
+Printers using a different BLE service UUID, a proprietary binary protocol (e.g. cat-printer `0xAE30`), or Classic Bluetooth SPP only will **not** work without a new transport implementation.
+
+If you get a connection but garbled output, see [protocol.md](docs/protocol.md) for UUID discovery and pacing tuning. PRs adding tested devices to this table are welcome.
 
 ## Quick start
 
@@ -23,7 +61,7 @@ Open [http://localhost:5173](http://localhost:5173) in **Chrome or Edge**.
 |---|---|
 | **Browser** | Chrome or Edge (desktop/Android). Not Safari/iOS. |
 | **Host** | `localhost` or HTTPS |
-| **Printer** | YHK-* BLE thermal, ISSC UART profile |
+| **Printer** | BLE thermal with ISSC UART + ESC/POS raster (see [Supported devices](#supported-devices)) |
 
 ## Documentation
 
