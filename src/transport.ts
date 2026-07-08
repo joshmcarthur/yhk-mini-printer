@@ -1,6 +1,14 @@
-export const BLE_CHUNK_SIZE = 182;
-export const BLE_CHUNK_DELAY_MS = 40;
-export const BLE_FLUSH_DELAY_MS = 1500;
+import {
+  BLE_CHUNK_DELAY_MS,
+  BLE_CHUNK_SIZE,
+  BLE_FLUSH_DELAY_MS,
+} from "@shared/constants.ts";
+
+export {
+  BLE_CHUNK_DELAY_MS,
+  BLE_CHUNK_SIZE,
+  BLE_FLUSH_DELAY_MS,
+} from "@shared/constants.ts";
 
 export interface PrinterTransport {
   readonly connected: boolean;

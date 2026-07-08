@@ -57,6 +57,17 @@ Open [http://localhost:5173](http://localhost:5173) in **Chrome or Edge**.
 2. Click **Connect** → select `YHK-...` in the picker.
 3. Click **Print Test Image**.
 
+### QR Composer
+
+Open [http://localhost:5173/qr.html](http://localhost:5173/qr.html) (or use the **QR** nav link).
+
+1. Connect to the printer.
+2. Choose a payload type: **URL**, **Plain text**, or **Wi-Fi**.
+3. Optionally add a caption and adjust QR size (180–300px).
+4. Check the live preview, then click **Print**.
+
+Wi-Fi QR codes use the standard `WIFI:` format — scan with your phone camera to join the network.
+
 ## Requirements
 
 | | |
@@ -76,11 +87,19 @@ Open [http://localhost:5173](http://localhost:5173) in **Chrome or Edge**.
 ## Project layout
 
 ```
+shared/
+├── constants.ts               # PRINTER_WIDTH, BLE pacing constants
+└── escpos.ts                  # ESC/POS encoding
 src/
-├── main.ts                    # UI
+├── main.ts                    # Test image UI
+├── qr.ts                      # QR composer UI
+├── composer/
+│   ├── compose.ts             # Receipt layout + QR rendering
+│   └── presets.ts             # Wi-Fi / URL / text payload helpers
+├── ui/
+│   └── connection.ts            # Shared BLE connect UI
 ├── transport.ts               # PrinterTransport + paced sendChunked()
 ├── transport/web-bluetooth.ts # Web Bluetooth (Phase 1)
-├── escpos.ts                  # ESC/POS encoding
 └── image.ts                   # Test pattern + thresholding
 ```
 

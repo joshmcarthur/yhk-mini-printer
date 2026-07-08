@@ -11,8 +11,13 @@
     "preview:pages": "BASE_PATH=/yhk-mini-printer/ vite preview"
   },
   "devDependencies": {
+    "@types/node": "^26.1.0",
+    "@types/qrcode": "^1.5.6",
     "@types/web-bluetooth": "^0.0.21",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
   }
 }

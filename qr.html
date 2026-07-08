@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Composer — YHK Mini Printer</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header>
+        <div class="header-row">
+          <div>
+            <h1>QR Composer</h1>
+            <p class="subtitle">Encode URLs, text, or Wi-Fi onto a receipt strip</p>
+          </div>
+          <a
+            class="github-link"
+            href="https://github.com/joshmcarthur/yhk-mini-printer"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+        </div>
+      </header>
+
+      <nav class="app-nav" aria-label="App sections">
+        <a href="./index.html">Test</a>
+        <a href="./qr.html" aria-current="page">QR</a>
+        <a href="./map.html" class="nav-disabled" aria-disabled="true">Map</a>
+      </nav>
+
+      <section class="actions">
+        <button id="connect-btn" type="button">Connect</button>
+        <button id="print-btn" type="button" disabled>Print</button>
+        <button id="disconnect-btn" type="button" disabled>Disconnect</button>
+      </section>
+
+      <p id="connection-status" class="connection-status">Not connected</p>
+
+      <section class="composer-section">
+        <h2>Payload</h2>
+        <fieldset class="payload-type">
+          <legend class="sr-only">Payload type</legend>
+          <label class="radio-label">
+            <input type="radio" name="payload-type" value="url" checked />
+            URL
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="payload-type" value="text" />
+            Plain text
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="payload-type" value="wifi" />
+            Wi-Fi
+          </label>
+        </fieldset>
+
+        <div id="url-field" class="field">
+          <label for="url-input">URL</label>
+          <input
+            id="url-input"
+            type="url"
+            inputmode="url"
+            placeholder="https://example.com"
+            autocomplete="url"
+          />
+        </div>
+
+        <div id="text-field" class="field" hidden>
+          <label for="text-input">Text</label>
+          <textarea
+            id="text-input"
+            rows="3"
+            placeholder="Any text to encode"
+          ></textarea>
+        </div>
+
+        <div id="wifi-field" class="field" hidden>
+          <label for="wifi-ssid">Network name (SSID)</label>
+          <input
+            id="wifi-ssid"
+            type="text"
+            autocomplete="off"
+            placeholder="MyNetwork"
+          />
+          <label for="wifi-password">Password</label>
+          <input
+            id="wifi-password"
+            type="password"
+            autocomplete="off"
+            placeholder="Leave empty for open networks"
+          />
+        </div>
+
+        <div class="field">
+          <label for="caption-input">Caption (optional)</label>
+          <input
+            id="caption-input"
+            type="text"
+            placeholder="Printed above the QR code"
+          />
+        </div>
+
+        <div class="field">
+          <label for="qr-size-input">
+            QR size: <span id="qr-size-value">240</span>px
+          </label>
+          <input
+            id="qr-size-input"
+            type="range"
+            min="180"
+            max="300"
+            step="10"
+            value="240"
+          />
+        </div>
+      </section>
+
+      <section class="preview-section">
+        <h2>Preview</h2>
+        <canvas id="preview" width="384" height="240"></canvas>
+      </section>
+
+      <section class="log-section">
+        <h2>Status</h2>
+        <pre id="log" aria-live="polite"></pre>
+      </section>
+    </main>
+    <script type="module" src="/src/qr.ts"></script>
+  </body>
+</html>
