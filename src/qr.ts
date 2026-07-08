@@ -18,6 +18,7 @@ interface QrFormState {
   wifiPassword: string;
   caption: string;
   qrSize: number;
+  fontSize: number;
 }
 
 const STORAGE_KEY = "yhk-qr-composer-state";
@@ -54,6 +55,8 @@ const wifiPasswordInput =
 const captionInput = getRequiredElement<HTMLInputElement>("#caption-input");
 const qrSizeInput = getRequiredElement<HTMLInputElement>("#qr-size-input");
 const qrSizeValue = getRequiredElement<HTMLSpanElement>("#qr-size-value");
+const fontSizeInput = getRequiredElement<HTMLInputElement>("#font-size-input");
+const fontSizeValue = getRequiredElement<HTMLSpanElement>("#font-size-value");
 
 const transport = new WebBluetoothTransport();
 const connection = createConnectionController({
@@ -85,6 +88,7 @@ function readFormState(): QrFormState {
     wifiPassword: wifiPasswordInput.value,
     caption: captionInput.value,
     qrSize: Number(qrSizeInput.value),
+    fontSize: Number(fontSizeInput.value),
   };
 }
 
@@ -99,7 +103,17 @@ function loadFormState(): QrFormState | null {
   }
 
   try {
-    return JSON.parse(raw) as QrFormState;
+    const parsed = JSON.parse(raw) as Partial<QrFormState>;
+    return {
+      payloadType: parsed.payloadType ?? "url",
+      url: parsed.url ?? "",
+      text: parsed.text ?? "",
+      wifiSsid: parsed.wifiSsid ?? "",
+      wifiPassword: parsed.wifiPassword ?? "",
+      caption: parsed.caption ?? "",
+      qrSize: parsed.qrSize ?? 240,
+      fontSize: parsed.fontSize ?? 14,
+    };
   } catch {
     return null;
   }
@@ -117,6 +131,8 @@ function applyFormState(state: QrFormState): void {
   captionInput.value = state.caption;
   qrSizeInput.value = String(state.qrSize);
   qrSizeValue.textContent = String(state.qrSize);
+  fontSizeInput.value = String(state.fontSize);
+  fontSizeValue.textContent = String(state.fontSize);
   updatePayloadFields();
 }
 
@@ -187,7 +203,7 @@ async function refreshPreview(): Promise<void> {
       caption: state.caption,
       qrSize: state.qrSize,
     });
-    const result = await compose(blocks);
+    const result = await compose(blocks, { fontSize: state.fontSize });
     drawPreview(previewCanvas, result.canvas);
   } catch (error) {
     connection.log(`Preview failed: ${connection.formatError(error)}`);
@@ -211,7 +227,7 @@ async function handlePrint(): Promise<void> {
       caption: state.caption,
       qrSize: state.qrSize,
     });
-    const result = await compose(blocks);
+    const result = await compose(blocks, { fontSize: state.fontSize });
     drawPreview(previewCanvas, result.canvas);
 
     const job = buildPrintJob(result.pixels);
@@ -229,6 +245,7 @@ function initialize(): void {
     applyFormState(saved);
   } else {
     qrSizeValue.textContent = qrSizeInput.value;
+    fontSizeValue.textContent = fontSizeInput.value;
     updatePayloadFields();
   }
 
@@ -255,6 +272,11 @@ function initialize(): void {
 
   qrSizeInput.addEventListener("input", () => {
     qrSizeValue.textContent = qrSizeInput.value;
+    void refreshPreview();
+  });
+
+  fontSizeInput.addEventListener("input", () => {
+    fontSizeValue.textContent = fontSizeInput.value;
     void refreshPreview();
   });
 

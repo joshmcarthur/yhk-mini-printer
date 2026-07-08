@@ -28,20 +28,46 @@ interface LayoutItem {
 }
 
 const PADDING = 16;
-const TITLE_FONT = "bold 18px monospace";
-const TEXT_FONT = "14px monospace";
-const MONO_FONT = "11px monospace";
-const LINE_HEIGHT = 18;
-const TITLE_LINE_HEIGHT = 22;
 
-function getContextFont(font: "normal" | "mono" | "title"): string {
+export interface ComposeOptions {
+  width?: number;
+  fontSize?: number;
+}
+
+interface Typography {
+  titleFont: string;
+  textFont: string;
+  monoFont: string;
+  titleLineHeight: number;
+  lineHeight: number;
+}
+
+const DEFAULT_FONT_SIZE = 14;
+
+function createTypography(fontSize: number): Typography {
+  const monoSize = Math.max(8, fontSize - 3);
+  const titleSize = fontSize + 4;
+
+  return {
+    titleFont: `bold ${titleSize}px monospace`,
+    textFont: `${fontSize}px monospace`,
+    monoFont: `${monoSize}px monospace`,
+    titleLineHeight: Math.round(titleSize * 1.25),
+    lineHeight: Math.round(fontSize * 1.3),
+  };
+}
+
+function getContextFont(
+  typography: Typography,
+  font: "normal" | "mono" | "title",
+): string {
   switch (font) {
     case "title":
-      return TITLE_FONT;
+      return typography.titleFont;
     case "mono":
-      return MONO_FONT;
+      return typography.monoFont;
     case "normal":
-      return TEXT_FONT;
+      return typography.textFont;
   }
 }
 
@@ -107,13 +133,15 @@ function truncateLines(
 
 function measureTextBlock(
   context: CanvasRenderingContext2D,
+  typography: Typography,
   text: string,
   font: "normal" | "mono" | "title",
   maxWidth: number,
   maxLines?: number,
 ): { lines: string[]; height: number } {
-  context.font = getContextFont(font);
-  const lineHeight = font === "title" ? TITLE_LINE_HEIGHT : LINE_HEIGHT;
+  context.font = getContextFont(typography, font);
+  const lineHeight =
+    font === "title" ? typography.titleLineHeight : typography.lineHeight;
   const lines = wrapLines(context, text, maxWidth, maxLines);
   return {
     lines,
@@ -125,6 +153,7 @@ function buildLayout(
   context: CanvasRenderingContext2D,
   blocks: ComposerBlock[],
   width: number,
+  typography: Typography,
 ): LayoutItem[] {
   const maxTextWidth = width - PADDING * 2;
   const layout: LayoutItem[] = [];
@@ -134,6 +163,7 @@ function buildLayout(
       case "title": {
         const measured = measureTextBlock(
           context,
+          typography,
           block.text,
           "title",
           maxTextWidth,
@@ -149,6 +179,7 @@ function buildLayout(
         const font = block.font ?? "normal";
         const measured = measureTextBlock(
           context,
+          typography,
           block.text,
           font === "mono" ? "mono" : "normal",
           maxTextWidth,
@@ -213,8 +244,11 @@ async function drawQr(
 
 export async function compose(
   blocks: ComposerBlock[],
-  width = PRINTER_WIDTH,
+  options: ComposeOptions = {},
 ): Promise<ComposeResult> {
+  const width = options.width ?? PRINTER_WIDTH;
+  const typography = createTypography(options.fontSize ?? DEFAULT_FONT_SIZE);
+
   const measureCanvas = document.createElement("canvas");
   measureCanvas.width = width;
   const measureContext = measureCanvas.getContext("2d");
@@ -222,7 +256,7 @@ export async function compose(
     throw new Error("Canvas 2D context is not available.");
   }
 
-  const layout = buildLayout(measureContext, blocks, width);
+  const layout = buildLayout(measureContext, blocks, width, typography);
   const contentHeight = layout.reduce((sum, item) => sum + item.height, 0);
   const height = Math.max(contentHeight + PADDING * 2, 1);
 
@@ -243,27 +277,27 @@ export async function compose(
   for (const item of layout) {
     switch (item.kind) {
       case "title": {
-        context.font = TITLE_FONT;
+        context.font = typography.titleFont;
         context.fillStyle = "#000000";
         context.textAlign = "center";
         context.textBaseline = "top";
         const lines = (item.text ?? "").split("\n");
         for (const line of lines) {
           context.fillText(line, width / 2, y);
-          y += TITLE_LINE_HEIGHT;
+          y += typography.titleLineHeight;
         }
         break;
       }
       case "text": {
         const font = item.font === "mono" ? "mono" : "normal";
-        context.font = getContextFont(font);
+        context.font = getContextFont(typography, font);
         context.fillStyle = "#000000";
         context.textAlign = "center";
         context.textBaseline = "top";
         const lines = (item.text ?? "").split("\n");
         for (const line of lines) {
           context.fillText(line, width / 2, y);
-          y += LINE_HEIGHT;
+          y += typography.lineHeight;
         }
         break;
       }
