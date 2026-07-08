@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YHK Mini Printer</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header>
+        <h1>YHK Mini Printer</h1>
+        <p class="subtitle">Phase 1 — Web Bluetooth proof of concept</p>
+      </header>
+
+      <section class="actions">
+        <button id="connect-btn" type="button">Connect</button>
+        <button id="print-btn" type="button" disabled>Print Test Image</button>
+        <button id="disconnect-btn" type="button" disabled>Disconnect</button>
+      </section>
+
+      <p id="connection-status" class="connection-status">Not connected</p>
+
+      <section class="preview-section">
+        <h2>Preview</h2>
+        <canvas id="preview" width="384" height="240"></canvas>
+      </section>
+
+      <section class="log-section">
+        <h2>Status</h2>
+        <pre id="log" aria-live="polite"></pre>
+      </section>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
