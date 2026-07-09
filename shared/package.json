@@ -1,0 +1,11 @@
+{
+  "name": "@yhk/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./constants": "./constants.ts",
+    "./escpos": "./escpos.ts",
+    "./send-chunked": "./send-chunked.ts"
+  }
+}
