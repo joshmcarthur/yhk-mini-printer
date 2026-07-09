@@ -6,6 +6,9 @@
   "exports": {
     "./constants": "./constants.ts",
     "./escpos": "./escpos.ts",
-    "./send-chunked": "./send-chunked.ts"
+    "./send-chunked": "./send-chunked.ts",
+    "./ble-uuids": "./ble-uuids.ts",
+    "./print-document": "./print-document.ts",
+    "./dither": "./dither.ts"
   }
 }

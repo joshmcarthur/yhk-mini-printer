@@ -3,12 +3,17 @@ import {
   sendChunked,
   type PrinterTransport,
 } from "../transport.ts";
+import {
+  ISSC_RX_CHARACTERISTIC_UUID,
+  ISSC_SERVICE_UUID,
+  ISSC_TX_CHARACTERISTIC_UUID,
+} from "@shared/ble-uuids.ts";
 
-export const ISSC_SERVICE_UUID = "49535343-fe7d-4ae5-8fa9-9fafd205e455";
-export const ISSC_TX_CHARACTERISTIC_UUID =
-  "49535343-8841-43f4-a8d4-ecbe34729bb3";
-export const ISSC_RX_CHARACTERISTIC_UUID =
-  "49535343-1e4d-4bd9-ba61-23c647249616";
+export {
+  ISSC_RX_CHARACTERISTIC_UUID,
+  ISSC_SERVICE_UUID,
+  ISSC_TX_CHARACTERISTIC_UUID,
+} from "@shared/ble-uuids.ts";
 
 function assertWebBluetoothAvailable(): void {
   if (!navigator.bluetooth) {
