@@ -84,17 +84,100 @@ Wi-Fi QR codes use the standard `WIFI:` format — scan with your phone camera t
 | [Protocol](docs/protocol.md) | BLE UUIDs, ESC/POS, chunk pacing, tuning |
 | [Exploration notes](docs/exploration/chatgpt.md) | Early research and UUID discovery |
 
+## MCP print server
+
+The repo includes a local HTTP print daemon (`server/`) and an MCP server (`mcp/`) so Cursor agents can print via BLE.
+
+### Quick start (Mac dev)
+
+```bash
+npm install
+npm run mcp:build
+
+# Terminal 1 — print daemon (printer powered on, not connected to phone)
+PRINTER_ADDRESS=aa:bb:cc:dd:ee:ff npm run server:dev
+
+# Verify
+curl http://localhost:8787/health
+curl http://localhost:8787/scan
+curl -X POST http://localhost:8787/print \
+  -H 'Content-Type: application/json' \
+  -d '{"title":"Test","lines":["Hello","World"]}'
+```
+
+On first run without `PRINTER_ADDRESS`, the server scans for `YHK-*` devices and logs discovered addresses. Pair the printer in macOS Bluetooth settings, then set `PRINTER_ADDRESS` to the BLE MAC.
+
+**Note:** `@abandonware/noble` requires a supported Node version (Node 20 LTS recommended). The HTTP server starts even if BLE is unavailable; `/health` will show `printer_connected: false`.
+
+### Cursor MCP config
+
+Add to `.cursor/mcp.json` (or Cursor user MCP settings):
+
+```json
+{
+  "mcpServers": {
+    "yhk-printer": {
+      "command": "node",
+      "args": ["mcp/dist/index.js"],
+      "env": {
+        "PRINT_SERVER_URL": "http://localhost:8787"
+      }
+    }
+  }
+}
+```
+
+For a Raspberry Pi print server on the LAN, point `PRINT_SERVER_URL` at `http://pi.local:8787` and run the daemon on the Pi with `PRINT_SERVER_HOST=0.0.0.0`.
+
+### MCP tools
+
+| Tool | Purpose |
+|------|---------|
+| `printer_status` | Check daemon health and BLE connection |
+| `print` | Compose and print a document (`blocks[]` or shorthand `title`/`lines`/`qr`/`footer`/`images`) |
+
+### Environment variables
+
+| Var | Default | Package | Purpose |
+|-----|---------|---------|---------|
+| `PRINT_SERVER_URL` | `http://localhost:8787` | mcp | HTTP API base URL |
+| `PORT` | `8787` | server | HTTP listen port |
+| `PRINT_SERVER_HOST` | `127.0.0.1` | server | Bind address (`0.0.0.0` on Pi) |
+| `PRINTER_ADDRESS` | — | server | BLE MAC after pairing |
+| `PRINTER_NAME_PREFIX` | `YHK` | server | Scan filter when MAC unset |
+| `BLE_CHUNK_DELAY_MS` | `40` | server | Chunk pacing between writes |
+
+### Pi deployment
+
+1. Install Node 20+ on the Pi.
+2. Clone the repo, `npm install`, `npm run server:build` (or use `tsx` via `server:dev`).
+3. Set `PRINTER_ADDRESS` and `PRINT_SERVER_HOST=0.0.0.0`.
+4. Run `npm run server:start` under systemd on boot.
+5. Keep MCP on your laptop; only the HTTP daemon runs on the Pi.
+
 ## Project layout
 
 ```
 shared/
 ├── constants.ts               # PRINTER_WIDTH, BLE pacing constants
-└── escpos.ts                  # ESC/POS encoding
+├── escpos.ts                  # ESC/POS encoding
+├── print-document.ts          # PrintBlock schema + request normalizer
+├── send-chunked.ts            # BLE chunk pacing helper
+└── dither.ts                  # Threshold + Floyd-Steinberg dither
+server/
+├── src/
+│   ├── main.ts                # Hono HTTP server entry
+│   ├── config.ts              # env parsing
+│   ├── composer/              # Node canvas composer
+│   ├── routes/                # /health, /print, /print/raw
+│   └── transport/             # Native BLE (noble)
+mcp/
+└── src/index.ts               # MCP stdio server (printer_status, print)
 src/
 ├── main.ts                    # Test image UI
 ├── qr.ts                      # QR composer UI
 ├── composer/
-│   ├── compose.ts             # Receipt layout + QR rendering
+│   ├── compose.ts             # Block layout + QR rendering
 │   └── presets.ts             # Wi-Fi / URL / text payload helpers
 ├── ui/
 │   └── connection.ts            # Shared BLE connect UI
@@ -125,7 +208,7 @@ Deploys to GitHub Pages automatically on push to `main` via [`.github/workflows/
 ## Roadmap
 
 - [x] **Phase 1** — Web Bluetooth PoC, test image print
-- [ ] **Phase 2** — Pi print server, native BLE
+- [x] **Phase 2** — Pi print server, native BLE, MCP tools
 - [ ] **Phase 3** — HTTP client transport (iOS, remote)
 - [ ] **Phase 4** — Webhooks, queue, auth
 
