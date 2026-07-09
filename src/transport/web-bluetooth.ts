@@ -112,4 +112,22 @@ export class WebBluetoothTransport implements PrinterTransport {
   get deviceName(): string | undefined {
     return this.device?.name ?? undefined;
   }
+
+  get deviceId(): string | undefined {
+    return this.device?.id ?? undefined;
+  }
+}
+
+const MAC_ADDRESS_PATTERN = /^([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$/;
+
+export function isMacAddress(value: string): boolean {
+  return MAC_ADDRESS_PATTERN.test(value);
+}
+
+export function normalizeBleAddress(value: string): string {
+  if (!isMacAddress(value)) {
+    return value;
+  }
+
+  return value.toLowerCase().replace(/-/g, ":");
 }

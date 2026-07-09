@@ -79,6 +79,43 @@ button:disabled {
   font-weight: 600;
 }
 
+.device-info {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.5rem;
+  background: #ffffff;
+}
+
+.device-info h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.device-info-label {
+  margin: 0 0 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.device-info-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+#device-address {
+  font: 0.875rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  word-break: break-all;
+}
+
+.device-info-hint {
+  margin: 0.625rem 0 0;
+  color: #52525b;
+  font-size: 0.8125rem;
+}
+
 .app-nav {
   display: flex;
   flex-wrap: wrap;
@@ -266,7 +303,8 @@ button:disabled {
   }
 
   .subtitle,
-  .demo-item figcaption {
+  .demo-item figcaption,
+  .device-info-hint {
     color: #a1a1aa;
   }
 
@@ -319,7 +357,8 @@ button:disabled {
 
   #preview,
   #log,
-  .demo-item video {
+  .demo-item video,
+  .device-info {
     background: #18181b;
     border-color: #3f3f46;
   }

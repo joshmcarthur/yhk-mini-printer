@@ -39,6 +39,16 @@
 
       <p id="connection-status" class="connection-status">Not connected</p>
 
+      <section id="device-info" class="device-info" hidden>
+        <h2>Print server</h2>
+        <p id="device-address-label" class="device-info-label">BLE address</p>
+        <div class="device-info-row">
+          <code id="device-address"></code>
+          <button id="copy-address-btn" type="button" disabled>Copy</button>
+        </div>
+        <p id="device-address-hint" class="device-info-hint"></p>
+      </section>
+
       <section class="preview-section">
         <h2>Preview</h2>
         <canvas id="preview" width="384" height="240"></canvas>

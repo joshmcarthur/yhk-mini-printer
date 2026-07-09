@@ -22,6 +22,14 @@ const disconnectButton =
   getRequiredElement<HTMLButtonElement>("#disconnect-btn");
 const connectionStatus =
   getRequiredElement<HTMLParagraphElement>("#connection-status");
+const deviceInfoContainer = getRequiredElement<HTMLElement>("#device-info");
+const deviceAddressLabel =
+  getRequiredElement<HTMLParagraphElement>("#device-address-label");
+const deviceAddressText = getRequiredElement<HTMLElement>("#device-address");
+const copyAddressButton =
+  getRequiredElement<HTMLButtonElement>("#copy-address-btn");
+const deviceAddressHint =
+  getRequiredElement<HTMLParagraphElement>("#device-address-hint");
 const previewCanvas = getRequiredElement<HTMLCanvasElement>("#preview");
 const logElement = getRequiredElement<HTMLPreElement>("#log");
 
@@ -33,6 +41,13 @@ const connection = createConnectionController({
     disconnectButton,
     connectionStatus,
     logElement,
+    deviceInfo: {
+      container: deviceInfoContainer,
+      labelText: deviceAddressLabel,
+      addressText: deviceAddressText,
+      copyButton: copyAddressButton,
+      hintText: deviceAddressHint,
+    },
   },
   dependentButtons: [printButton],
 });

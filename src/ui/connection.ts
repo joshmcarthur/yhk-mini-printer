@@ -1,11 +1,24 @@
 import { PrinterTransportError } from "../transport.ts";
-import type { WebBluetoothTransport } from "../transport/web-bluetooth.ts";
+import {
+  isMacAddress,
+  normalizeBleAddress,
+  type WebBluetoothTransport,
+} from "../transport/web-bluetooth.ts";
+
+export interface DeviceInfoElements {
+  container: HTMLElement;
+  addressText: HTMLElement;
+  copyButton: HTMLButtonElement;
+  hintText: HTMLElement;
+  labelText: HTMLElement;
+}
 
 export interface ConnectionElements {
   connectButton: HTMLButtonElement;
   disconnectButton: HTMLButtonElement;
   connectionStatus: HTMLParagraphElement;
   logElement: HTMLPreElement;
+  deviceInfo?: DeviceInfoElements;
 }
 
 export interface ConnectionController {
@@ -15,13 +28,6 @@ export interface ConnectionController {
   formatError: (error: unknown) => string;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
-}
-
-export interface ConnectionOptions {
-  transport: WebBluetoothTransport;
-  elements: ConnectionElements;
-  dependentButtons?: HTMLButtonElement[];
-  onConnectionChange?: (connected: boolean) => void;
 }
 
 export function formatTransportError(error: unknown): string {
@@ -36,12 +42,76 @@ export function formatTransportError(error: unknown): string {
   return String(error);
 }
 
+export interface ConnectionOptions {
+  transport: WebBluetoothTransport;
+  elements: ConnectionElements;
+  dependentButtons?: HTMLButtonElement[];
+  onConnectionChange?: (connected: boolean) => void;
+}
+
+async function copyText(value: string): Promise<void> {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(value);
+    return;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = value;
+  textarea.setAttribute("readonly", "true");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
+}
+
+function updateDeviceInfo(
+  transport: WebBluetoothTransport,
+  deviceInfo: DeviceInfoElements | undefined,
+  connected: boolean,
+): void {
+  if (!deviceInfo) {
+    return;
+  }
+
+  const deviceId = transport.deviceId;
+  if (!connected || !deviceId) {
+    deviceInfo.container.hidden = true;
+    deviceInfo.copyButton.disabled = true;
+    return;
+  }
+
+  const address = normalizeBleAddress(deviceId);
+  const macAddress = isMacAddress(address);
+
+  deviceInfo.container.hidden = false;
+  deviceInfo.labelText.textContent = macAddress ? "BLE address" : "Device ID";
+  deviceInfo.addressText.textContent = address;
+  deviceInfo.hintText.textContent = macAddress
+    ? "Copy and set as PRINTER_ADDRESS when starting the print server."
+    : "Web Bluetooth hides the MAC on this platform. Find it in System Settings → Bluetooth, or run the server without PRINTER_ADDRESS to scan.";
+  deviceInfo.copyButton.disabled = false;
+  deviceInfo.copyButton.onclick = () => {
+    const value = macAddress ? `PRINTER_ADDRESS=${address}` : address;
+    void copyText(value)
+      .then(() => {
+        const originalLabel = deviceInfo.copyButton.textContent;
+        deviceInfo.copyButton.textContent = "Copied!";
+        window.setTimeout(() => {
+          deviceInfo.copyButton.textContent = originalLabel;
+        }, 1500);
+      })
+      .catch(() => undefined);
+  };
+}
+
 export function createConnectionController(
   options: ConnectionOptions,
 ): ConnectionController {
   const { transport, elements, dependentButtons = [], onConnectionChange } =
     options;
-  const { connectButton, disconnectButton, connectionStatus, logElement } =
+  const { connectButton, disconnectButton, connectionStatus, logElement, deviceInfo } =
     elements;
 
   function log(message: string): void {
@@ -62,6 +132,7 @@ export function createConnectionController(
       ? `Connected to ${deviceName ?? "printer"}`
       : "Not connected";
 
+    updateDeviceInfo(transport, deviceInfo, connected);
     onConnectionChange?.(connected);
   }
 
@@ -70,7 +141,14 @@ export function createConnectionController(
       log("Opening Bluetooth device picker...");
       await transport.connect();
       setConnectedState(true, transport.deviceName);
-      log(`Connected to ${transport.deviceName ?? "printer"}.`);
+      const deviceId = transport.deviceId;
+      if (deviceId && isMacAddress(normalizeBleAddress(deviceId))) {
+        log(
+          `Connected to ${transport.deviceName ?? "printer"} (${normalizeBleAddress(deviceId)}).`,
+        );
+      } else {
+        log(`Connected to ${transport.deviceName ?? "printer"}.`);
+      }
     } catch (error) {
       setConnectedState(false);
       log(`Connect failed: ${formatTransportError(error)}`);
