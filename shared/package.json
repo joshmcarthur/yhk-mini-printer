@@ -9,6 +9,7 @@
     "./send-chunked": "./send-chunked.ts",
     "./ble-uuids": "./ble-uuids.ts",
     "./print-document": "./print-document.ts",
-    "./dither": "./dither.ts"
+    "./dither": "./dither.ts",
+    "./device-id": "./device-id.ts"
   }
 }

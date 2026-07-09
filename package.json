@@ -4,14 +4,19 @@
   "version": "0.1.0",
   "type": "module",
   "workspaces": [
-    "shared"
+    "shared",
+    "server"
   ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "build:pages": "BASE_PATH=/yhk-mini-printer/ npm run build",
     "preview": "vite preview",
-    "preview:pages": "BASE_PATH=/yhk-mini-printer/ vite preview"
+    "preview:pages": "BASE_PATH=/yhk-mini-printer/ vite preview",
+    "server:dev": "npm run dev -w server",
+    "server:start": "npm run start -w server",
+    "server:build": "npm run build -w server",
+    "server:rebuild-ble": "npm rebuild @abandonware/noble"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
