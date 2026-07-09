@@ -1,4 +1,5 @@
 import { buildPrintJob } from "@shared/escpos.ts";
+import { DEFAULT_COMPOSE_FONT_SIZE } from "@shared/constants.ts";
 import { buildQrBlocks, compose } from "./composer/compose.ts";
 import { textQr, urlQr, wifiQr } from "./composer/presets.ts";
 import { drawPreview } from "./image.ts";
@@ -112,7 +113,7 @@ function loadFormState(): QrFormState | null {
       wifiPassword: parsed.wifiPassword ?? "",
       caption: parsed.caption ?? "",
       qrSize: parsed.qrSize ?? 240,
-      fontSize: parsed.fontSize ?? 14,
+      fontSize: parsed.fontSize ?? DEFAULT_COMPOSE_FONT_SIZE,
     };
   } catch {
     return null;

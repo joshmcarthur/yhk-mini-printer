@@ -1,5 +1,5 @@
 import QRCode from "qrcode";
-import { PRINTER_WIDTH } from "@shared/constants.ts";
+import { DEFAULT_COMPOSE_FONT_SIZE, PRINTER_WIDTH } from "@shared/constants.ts";
 import type {
   ComposerBlock,
   QrErrorCorrection,
@@ -40,11 +40,11 @@ interface Typography {
   lineHeight: number;
 }
 
-const DEFAULT_FONT_SIZE = 14;
+const DEFAULT_FONT_SIZE = DEFAULT_COMPOSE_FONT_SIZE;
 
 function createTypography(fontSize: number): Typography {
-  const monoSize = Math.max(8, fontSize - 3);
-  const titleSize = fontSize + 4;
+  const monoSize = Math.max(16, fontSize - 2);
+  const titleSize = fontSize + 6;
 
   return {
     titleFont: `bold ${titleSize}px monospace`,
