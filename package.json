@@ -6,7 +6,8 @@
   "workspaces": [
     "shared",
     "server",
-    "mcp"
+    "mcp",
+    "teletype"
   ],
   "scripts": {
     "dev": "vite",
@@ -17,8 +18,12 @@
     "server:dev": "npm run dev -w server",
     "server:start": "npm run start -w server",
     "server:build": "npm run build -w server",
-    "server:rebuild-ble": "npm rebuild @abandonware/noble",
-    "mcp:build": "npm run build -w mcp"
+    "server:rebuild-ble": "npm run rebuild --prefix node_modules/@abandonware/noble",
+    "mcp:build": "npm run build -w mcp",
+    "teletype:dev": "npm run dev -w teletype",
+    "teletype:build": "npm run build -w teletype",
+    "teletype:start": "npm run start -w teletype",
+    "teletype:test": "npm run test -w teletype"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",

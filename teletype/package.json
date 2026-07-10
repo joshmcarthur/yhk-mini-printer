@@ -1,0 +1,24 @@
+{
+  "name": "@yhk/teletype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "yhk-teletype": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "node --import tsx --test src/filter.test.ts src/format.test.ts"
+  },
+  "dependencies": {
+    "@yhk/shared": "*",
+    "mqtt": "^5.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}

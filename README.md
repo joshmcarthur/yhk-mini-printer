@@ -107,7 +107,13 @@ curl -X POST http://localhost:8787/print \
 
 On first run without `PRINTER_ADDRESS`, the server scans for `YHK-*` devices and logs discovered addresses. Pair the printer in macOS Bluetooth settings, then set `PRINTER_ADDRESS` to the BLE MAC.
 
-**Note:** `@abandonware/noble` requires a supported Node version (Node 20 LTS recommended). The HTTP server starts even if BLE is unavailable; `/health` will show `printer_connected: false`.
+**Note:** `@abandonware/noble` ships prebuilt binaries only for older Node ABIs. On Node 22+ (including Node 24), compile from source after `npm install`:
+
+```bash
+npm run server:rebuild-ble
+```
+
+Alternatively, use Node 20 LTS. The HTTP server starts even if BLE is unavailable; `/health` will show `printer_connected: false`.
 
 ### Cursor MCP config
 
@@ -129,6 +135,38 @@ Add to `.cursor/mcp.json` (or Cursor user MCP settings):
 
 For a Raspberry Pi print server on the LAN, point `PRINT_SERVER_URL` at `http://pi.local:8787` and run the daemon on the Pi with `PRINT_SERVER_HOST=0.0.0.0`.
 
+### Meshtastic teletype
+
+The `teletype/` workspace subscribes to Meshtastic JSON MQTT and prints **text** messages from the **primary channel** or **DMs** on the BLE printer via the print server.
+
+```bash
+npm install
+npm run teletype:build
+
+# Terminal 1 — print daemon
+PRINTER_ADDRESS=<connect_id> npm run server:dev
+
+# Terminal 2 — dry-run (log blocks, no print)
+MQTT_URL=mqtt://127.0.0.1:1883 TELETYPE_DRY_RUN=1 npm run teletype:dev
+
+# Terminal 2 — live teletype
+MQTT_URL=mqtt://127.0.0.1:1883 npm run teletype:dev
+```
+
+**Prerequisites:** Meshtastic node with JSON MQTT uplink enabled; broker reachable from the teletype host. DMs only appear if the MQTT gateway can decrypt them (sender may need **Ok to MQTT** on firmware ≥2.5).
+
+| Var | Default | Purpose |
+|-----|---------|---------|
+| `MQTT_URL` | — (required) | Broker URL, e.g. `mqtt://127.0.0.1:1883` |
+| `MQTT_TOPIC` | `msh/+/+/json/#` | Subscribe pattern |
+| `MQTT_CLIENT_ID` | `yhk-teletype` | MQTT client id |
+| `MQTT_USERNAME` / `MQTT_PASSWORD` | — | Optional broker auth |
+| `PRINT_SERVER_URL` | `http://localhost:8787` | Print daemon |
+| `TELETYPE_DRY_RUN` | unset | Set to `1` to log without printing |
+| `TELETYPE_LOG_LEVEL` | `info` | Set to `debug` to log skipped messages |
+
+Run `npm run teletype:test` for unit tests.
+
 ### MCP tools
 
 | Tool | Purpose |
@@ -140,7 +178,7 @@ For a Raspberry Pi print server on the LAN, point `PRINT_SERVER_URL` at `http://
 
 | Var | Default | Package | Purpose |
 |-----|---------|---------|---------|
-| `PRINT_SERVER_URL` | `http://localhost:8787` | mcp | HTTP API base URL |
+| `PRINT_SERVER_URL` | `http://localhost:8787` | mcp, teletype | HTTP API base URL |
 | `PORT` | `8787` | server | HTTP listen port |
 | `PRINT_SERVER_HOST` | `127.0.0.1` | server | Bind address (`0.0.0.0` on Pi) |
 | `PRINTER_ADDRESS` | — | server | BLE MAC after pairing |
@@ -173,6 +211,8 @@ server/
 │   └── transport/             # Native BLE (noble)
 mcp/
 └── src/index.ts               # MCP stdio server (printer_status, print)
+teletype/
+└── src/                       # Meshtastic MQTT → print server teletype
 src/
 ├── main.ts                    # Test image UI
 ├── qr.ts                      # QR composer UI
