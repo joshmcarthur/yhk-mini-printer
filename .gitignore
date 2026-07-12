@@ -3,3 +3,7 @@ dist
 .DS_Store
 *.local
 .cursor
+ios/YHKPrinter/Resources/Web/
+ios/build/
+*.xcuserstate
+xcuserdata/

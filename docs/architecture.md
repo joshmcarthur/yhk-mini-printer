@@ -24,10 +24,18 @@ flowchart TB
     Client --> Http --> Pi
   end
 
+  subgraph ios ["iOS app (implemented)"]
+    IOSWeb["WKWebView web UI"]
+    Polyfill["navigator.bluetooth polyfill"]
+    CoreBT["CoreBluetooth"]
+    IOSWeb --> Polyfill --> CoreBT
+  end
+
   Printer["YHK-962D"]
 
   WebBT -->|"BLE GATT"| Printer
   Native -->|"BLE GATT"| Printer
+  CoreBT -->|"BLE GATT"| Printer
 ```
 
 ## PrinterTransport
@@ -46,7 +54,8 @@ interface PrinterTransport {
 | Transport | Status | Runs where | Connect |
 |-----------|--------|------------|---------|
 | `WebBluetoothTransport` | Implemented | Browser (Chrome) | Device picker |
-| `NativeBleTransport` | Planned | Pi daemon | Paired MAC address |
+| `NativeBleTransport` | Implemented | Pi daemon / Mac server | Paired MAC address |
+| `IosWebViewTransport` | Implemented (polyfill) | iOS app `WKWebView` | Native device picker sheet |
 | `HttpTransport` | Planned | Browser | `POST` to Pi API |
 
 Shared modules used by every phase:
@@ -69,8 +78,14 @@ See [protocol.md](./protocol.md) for wire-format details.
 |-------|-------------|------------|
 | **1** | Web Bluetooth PoC | Fast protocol validation from a laptop |
 | **2** | Pi print server + native BLE | Headless, always-on printing |
-| **3** | `HttpTransport` in web client | iOS Safari, remote access |
+| **3** | `HttpTransport` in web client | Remote access, Safari without the iOS app |
 | **4** | Webhooks, queue, auth | Jira, agents, multi-user |
+
+### iOS WebView app
+
+For local printing from an iPhone, the [`ios/`](../ios/) app bundles the same Vite web UI and injects a minimal `navigator.bluetooth` polyfill at document start. JavaScript still calls `WebBluetoothTransport` unchanged; native CoreBluetooth handles scan, connect, and `writeWithoutResponse`. Chunk pacing remains in `sendChunked()` on the JS side.
+
+This is an alternative to Phase 3 `HttpTransport` when the phone is in BLE range of the printer and no Pi server is needed.
 
 ### Phase 2 sketch
 
@@ -90,7 +105,7 @@ The Pi sits next to the printer, pairs once, and exposes e.g. `http://pi.local:8
 
 | Goal | Browser BLE limitation |
 |------|------------------------|
-| iOS / Safari | No Web Bluetooth |
+| iOS / Safari | No Web Bluetooth — use the iOS WebView app or Phase 3 `HttpTransport` |
 | Remote printing | User must be in BLE range |
 | Webhooks (Jira, etc.) | No server to receive HTTP |
 | Multiple senders | One tab, one connection |

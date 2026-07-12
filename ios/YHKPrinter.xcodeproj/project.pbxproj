@@ -1,0 +1,323 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A100000000000000000000B1 /* YHKPrinterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000021 /* YHKPrinterApp.swift */; };
+		A100000000000000000000B2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000022 /* ContentView.swift */; };
+		A100000000000000000000B3 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000023 /* WebView.swift */; };
+		A100000000000000000000B4 /* BluetoothBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000024 /* BluetoothBridge.swift */; };
+		A100000000000000000000B5 /* PrinterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000025 /* PrinterManager.swift */; };
+		A100000000000000000000B6 /* DevicePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000026 /* DevicePickerView.swift */; };
+		A100000000000000000000B7 /* BleUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000027 /* BleUUID.swift */; };
+		A100000000000000000000B8 /* BluetoothBridgeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000028 /* BluetoothBridgeError.swift */; };
+		A100000000000000000000B9 /* DiscoveredDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000029 /* DiscoveredDevice.swift */; };
+		A100000000000000000000BA /* web_bluetooth_polyfill.js in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000031 /* web_bluetooth_polyfill.js */; };
+		A100000000000000000000BB /* Web in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000032 /* Web */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A10000000000000000000001 /* YHKPrinter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YHKPrinter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000021 /* YHKPrinterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YHKPrinterApp.swift; sourceTree = "<group>"; };
+		A10000000000000000000022 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A10000000000000000000023 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		A10000000000000000000024 /* BluetoothBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothBridge.swift; sourceTree = "<group>"; };
+		A10000000000000000000025 /* PrinterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterManager.swift; sourceTree = "<group>"; };
+		A10000000000000000000026 /* DevicePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicePickerView.swift; sourceTree = "<group>"; };
+		A10000000000000000000027 /* BleUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleUUID.swift; sourceTree = "<group>"; };
+		A10000000000000000000028 /* BluetoothBridgeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothBridgeError.swift; sourceTree = "<group>"; };
+		A10000000000000000000029 /* DiscoveredDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveredDevice.swift; sourceTree = "<group>"; };
+		A10000000000000000000031 /* web_bluetooth_polyfill.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = web_bluetooth_polyfill.js; sourceTree = "<group>"; };
+		A10000000000000000000032 /* Web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Web; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A10000000000000000000005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A10000000000000000000010 = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000011 /* YHKPrinter */,
+				A10000000000000000000013 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A10000000000000000000011 /* YHKPrinter */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000021 /* YHKPrinterApp.swift */,
+				A10000000000000000000022 /* ContentView.swift */,
+				A10000000000000000000023 /* WebView.swift */,
+				A10000000000000000000024 /* BluetoothBridge.swift */,
+				A10000000000000000000025 /* PrinterManager.swift */,
+				A10000000000000000000026 /* DevicePickerView.swift */,
+				A10000000000000000000027 /* BleUUID.swift */,
+				A10000000000000000000028 /* BluetoothBridgeError.swift */,
+				A10000000000000000000029 /* DiscoveredDevice.swift */,
+				A10000000000000000000012 /* Resources */,
+			);
+			path = YHKPrinter;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000012 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000031 /* web_bluetooth_polyfill.js */,
+				A10000000000000000000032 /* Web */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000013 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000001 /* YHKPrinter.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A10000000000000000000002 /* YHKPrinter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A100000000000000000000C2 /* Build configuration list for PBXNativeTarget "YHKPrinter" */;
+			buildPhases = (
+				A10000000000000000000006 /* Bundle Web Assets */,
+				A10000000000000000000003 /* Sources */,
+				A10000000000000000000005 /* Frameworks */,
+				A10000000000000000000004 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = YHKPrinter;
+			productName = YHKPrinter;
+			productReference = A10000000000000000000001 /* YHKPrinter.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A10000000000000000000000 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					A10000000000000000000002 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = A100000000000000000000C1 /* Build configuration list for PBXProject "YHKPrinter" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A10000000000000000000010;
+			productRefGroup = A10000000000000000000013 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A10000000000000000000002 /* YHKPrinter */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A10000000000000000000004 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000000000000000000BA /* web_bluetooth_polyfill.js in Resources */,
+				A100000000000000000000BB /* Web in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A10000000000000000000006 /* Bundle Web Assets */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../package.json",
+				"$(SRCROOT)/../vite.config.ts",
+			);
+			name = "Bundle Web Assets";
+			outputPaths = (
+				"$(SRCROOT)/YHKPrinter/Resources/Web/index.html",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "cd \"${SRCROOT}/..\"\nbash scripts/copy-web-to-ios.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A10000000000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000000000000000000B1 /* YHKPrinterApp.swift in Sources */,
+				A100000000000000000000B2 /* ContentView.swift in Sources */,
+				A100000000000000000000B3 /* WebView.swift in Sources */,
+				A100000000000000000000B4 /* BluetoothBridge.swift in Sources */,
+				A100000000000000000000B5 /* PrinterManager.swift in Sources */,
+				A100000000000000000000B6 /* DevicePickerView.swift in Sources */,
+				A100000000000000000000B7 /* BleUUID.swift in Sources */,
+				A100000000000000000000B8 /* BluetoothBridgeError.swift in Sources */,
+				A100000000000000000000B9 /* DiscoveredDevice.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A100000000000000000000D1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A100000000000000000000D2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A100000000000000000000D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = T86Z8SF4GG;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "YHK Printer";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Connect to your YHK mini printer over Bluetooth.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joshmcarthur.YHKPrinter;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A100000000000000000000D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = T86Z8SF4GG;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "YHK Printer";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Connect to your YHK mini printer over Bluetooth.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joshmcarthur.YHKPrinter;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A100000000000000000000C1 /* Build configuration list for PBXProject "YHKPrinter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A100000000000000000000D1 /* Debug */,
+				A100000000000000000000D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A100000000000000000000C2 /* Build configuration list for PBXNativeTarget "YHKPrinter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A100000000000000000000D3 /* Debug */,
+				A100000000000000000000D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A10000000000000000000000 /* Project object */;
+}

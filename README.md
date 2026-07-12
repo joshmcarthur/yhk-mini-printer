@@ -68,11 +68,31 @@ Open [http://localhost:5173/qr.html](http://localhost:5173/qr.html) (or use the 
 
 Wi-Fi QR codes use the standard `WIFI:` format — scan with your phone camera to join the network.
 
+## iOS app
+
+An iOS app in [`ios/`](ios/) wraps the same web UI in a `WKWebView` and polyfills `navigator.bluetooth` via CoreBluetooth. No changes to the web transport are required — chunk pacing still runs in JavaScript.
+
+**Requirements:** physical iPhone (BLE does not work in Simulator), iOS 16+, Xcode 16+.
+
+```bash
+npm install
+npm run ios:bundle-web   # build web assets into ios/YHKPrinter/Resources/Web
+open ios/YHKPrinter.xcodeproj
+```
+
+In Xcode, select your iPhone, set a **Signing Team**, then Run. The **Bundle Web Assets** build phase re-runs `npm run ios:bundle-web` automatically on each build.
+
+1. Allow Bluetooth when prompted.
+2. Tap **Connect** — a native picker lists nearby `YHK-*` printers.
+3. Print from the **Test** or **QR** pages (same UI as the browser app).
+
+Disconnect the printer from other phone apps before connecting.
+
 ## Requirements
 
 | | |
 |---|---|
-| **Browser** | Chrome or Edge (desktop/Android). Not Safari/iOS. |
+| **Browser** | Chrome or Edge (desktop/Android). Not Safari/iOS — use the [iOS app](#ios-app) instead. |
 | **Host** | `localhost` or HTTPS |
 | **Printer** | BLE thermal with ISSC UART + ESC/POS raster (see [Supported devices](#supported-devices)) |
 
@@ -213,6 +233,8 @@ mcp/
 └── src/index.ts               # MCP stdio server (printer_status, print)
 teletype/
 └── src/                       # Meshtastic MQTT → print server teletype
+ios/
+└── YHKPrinter/                # SwiftUI shell + Web Bluetooth polyfill
 src/
 ├── main.ts                    # Test image UI
 ├── qr.ts                      # QR composer UI
@@ -231,6 +253,8 @@ src/
 ```bash
 npm run build          # local build (base /)
 npm run build:pages    # GitHub Pages build (base /yhk-mini-printer/)
+npm run build:ios      # iOS bundle build (base ./)
+npm run ios:bundle-web # build:ios + copy to ios/YHKPrinter/Resources/Web
 npm run preview        # serve production build locally
 ```
 
@@ -243,13 +267,14 @@ Deploys to GitHub Pages automatically on push to `main` via [`.github/workflows/
 | Bottom of image missing | Increase `BLE_CHUNK_DELAY_MS` in `src/transport.ts` (try 50–60) |
 | Service not found | Wrong UUIDs — see [protocol.md](docs/protocol.md#uuid-discovery) |
 | Upside-down output | Rotate image 180° before encoding |
-| Web Bluetooth unavailable | Use Chrome/Edge on localhost or HTTPS |
+| Web Bluetooth unavailable | Use Chrome/Edge on localhost or HTTPS; on iOS use the [iOS app](#ios-app) |
 
 ## Roadmap
 
 - [x] **Phase 1** — Web Bluetooth PoC, test image print
 - [x] **Phase 2** — Pi print server, native BLE, MCP tools
-- [ ] **Phase 3** — HTTP client transport (iOS, remote)
+- [x] **iOS** — WebView app with CoreBluetooth polyfill (local phone printing)
+- [ ] **Phase 3** — HTTP client transport (remote iOS / Safari via Pi)
 - [ ] **Phase 4** — Webhooks, queue, auth
 
 ## License
