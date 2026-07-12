@@ -6,8 +6,6 @@ Browser-based control for cheap BLE mini thermal printers. Connect over Web Blue
 
 In theory, any pocket thermal printer that accepts **rasterized bytes over BLE** via an ISSC-style UART service should work. Compatibility depends on the BLE GATT profile and whether the firmware accepts ESC/POS bitmap commands (many cheap "cat printer" class devices do).
 
-**Status:** Phase 1 proof of concept — protocol validated from the browser. Long-term target is a [Pi print server](docs/architecture.md) for iOS, remote printing, and webhooks.
-
 ![Kmart Thermal Bluetooth Printer (model 43437771)](docs/images/kmart-43437771.png)
 
 ## Demo
