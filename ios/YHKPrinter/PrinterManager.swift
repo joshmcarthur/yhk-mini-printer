@@ -12,6 +12,7 @@ final class PrinterManager: NSObject, ObservableObject {
 
     private var peripheralsById: [String: CBPeripheral] = [:]
     private var connectedPeripheral: CBPeripheral?
+    private var connectedDeviceName: String?
     private var txCharacteristic: CBCharacteristic?
 
     private var connectContinuation: CheckedContinuation<Void, Error>?
@@ -23,10 +24,18 @@ final class PrinterManager: NSObject, ObservableObject {
     }
 
     var isGattConnected: Bool {
-        connectedPeripheral?.state == .connected && txCharacteristic != nil
+        activeConnection() != nil
+    }
+
+    func connectionState() -> (id: String, name: String)? {
+        activeConnection()
     }
 
     func requestDevice() async throws -> (id: String, name: String) {
+        if let existing = activeConnection() {
+            return existing
+        }
+
         try ensurePoweredOn()
         discoveredDevices.removeAll()
 
@@ -41,6 +50,7 @@ final class PrinterManager: NSObject, ObservableObject {
         stopScanning()
         showDevicePicker = false
         peripheralsById[device.id] = device.peripheral
+        connectedDeviceName = device.name
         requestDeviceContinuation?.resume(returning: (device.id, device.name))
         requestDeviceContinuation = nil
     }
@@ -59,19 +69,24 @@ final class PrinterManager: NSObject, ObservableObject {
             throw BluetoothBridgeError.invalidDeviceId
         }
 
+        peripheralsById[deviceId] = peripheral
         connectedPeripheral = peripheral
-        txCharacteristic = nil
         peripheral.delegate = self
 
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            connectContinuation = continuation
-            centralManager.connect(peripheral, options: nil)
+        if let existing = activeConnection(), existing.id == deviceId {
+            return
         }
 
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            discoverContinuation = continuation
-            peripheral.discoverServices([BleUUID.service])
+        txCharacteristic = nil
+
+        if peripheral.state != .connected {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                connectContinuation = continuation
+                centralManager.connect(peripheral, options: nil)
+            }
         }
+
+        try await discoverGatt(for: peripheral)
     }
 
     func disconnect(deviceId: String) {
@@ -85,6 +100,7 @@ final class PrinterManager: NSObject, ObservableObject {
 
         if connectedPeripheral?.identifier == peripheral.identifier {
             connectedPeripheral = nil
+            connectedDeviceName = nil
             txCharacteristic = nil
         }
     }
@@ -116,6 +132,35 @@ final class PrinterManager: NSObject, ObservableObject {
         let writeType: CBCharacteristicWriteType =
             characteristic.properties.contains(.writeWithoutResponse) ? .withoutResponse : .withResponse
         peripheral.writeValue(data, for: characteristic, type: writeType)
+    }
+
+    private func activeConnection() -> (id: String, name: String)? {
+        guard let peripheral = connectedPeripheral,
+              peripheral.state == .connected,
+              txCharacteristic != nil else {
+            return nil
+        }
+
+        let id = peripheral.identifier.uuidString
+        let name = connectedDeviceName ?? peripheral.name ?? "YHK Printer"
+        return (id, name)
+    }
+
+    private func discoverGatt(for peripheral: CBPeripheral) async throws {
+        if let service = peripheral.services?.first(where: { $0.uuid == BleUUID.service }),
+           let characteristics = service.characteristics,
+           let tx = characteristics.first(where: { $0.uuid == BleUUID.tx }) {
+            txCharacteristic = tx
+            if let rx = characteristics.first(where: { $0.uuid == BleUUID.rx }) {
+                peripheral.setNotifyValue(true, for: rx)
+            }
+            return
+        }
+
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            discoverContinuation = continuation
+            peripheral.discoverServices([BleUUID.service])
+        }
     }
 
     private func peripheral(for deviceId: String) -> CBPeripheral? {
@@ -247,6 +292,7 @@ extension PrinterManager: CBCentralManagerDelegate {
         Task { @MainActor in
             if connectedPeripheral?.identifier == peripheral.identifier {
                 connectedPeripheral = nil
+                connectedDeviceName = nil
                 txCharacteristic = nil
             }
         }
@@ -292,6 +338,8 @@ extension PrinterManager: CBPeripheralDelegate {
                 failConnect(BluetoothBridgeError.characteristicNotFound)
                 return
             }
+
+            connectedDeviceName = connectedDeviceName ?? peripheral.name ?? "YHK Printer"
 
             if let rxCharacteristic = characteristics.first(where: { $0.uuid == BleUUID.rx }) {
                 peripheral.setNotifyValue(true, for: rxCharacteristic)

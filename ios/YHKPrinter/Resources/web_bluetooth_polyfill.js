@@ -159,6 +159,15 @@
   }
 
   const bluetooth = {
+    async getConnectionState() {
+      const result = await callNative("getConnectionState", {});
+      return {
+        connected: Boolean(result?.connected),
+        deviceId: result?.deviceId,
+        name: result?.name,
+      };
+    },
+
     async requestDevice() {
       const result = await callNative("requestDevice", {});
       return new BluetoothDevice(result.deviceId, result.name ?? "YHK Printer");

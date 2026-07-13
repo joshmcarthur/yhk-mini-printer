@@ -45,6 +45,15 @@ final class BluetoothBridge: NSObject, WKScriptMessageHandler {
                 "deviceId": device.id,
                 "name": device.name,
             ]
+        case "getConnectionState":
+            if let connection = printerManager.connectionState() {
+                return [
+                    "connected": true,
+                    "deviceId": connection.id,
+                    "name": connection.name,
+                ]
+            }
+            return ["connected": false]
         case "gattConnect":
             let deviceId = try requiredString(args, key: "deviceId")
             try await printerManager.connect(deviceId: deviceId)

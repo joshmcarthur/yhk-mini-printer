@@ -49,6 +49,21 @@ export interface ConnectionOptions {
   onConnectionChange?: (connected: boolean) => void;
 }
 
+interface NativeConnectionState {
+  connected: boolean;
+  deviceId?: string;
+  name?: string;
+}
+
+function getNativeConnectionState(): (() => Promise<NativeConnectionState>) | undefined {
+  const bluetooth = navigator.bluetooth as
+    | (Bluetooth & {
+        getConnectionState?: () => Promise<NativeConnectionState>;
+      })
+    | undefined;
+  return bluetooth?.getConnectionState;
+}
+
 async function copyText(value: string): Promise<void> {
   if (navigator.clipboard?.writeText) {
     await navigator.clipboard.writeText(value);
@@ -138,7 +153,18 @@ export function createConnectionController(
 
   async function connect(): Promise<void> {
     try {
-      log("Opening Bluetooth device picker...");
+      const getConnectionState = getNativeConnectionState();
+      const existing =
+        getConnectionState === undefined
+          ? undefined
+          : await getConnectionState();
+
+      if (existing?.connected) {
+        log("Restoring printer connection...");
+      } else {
+        log("Opening Bluetooth device picker...");
+      }
+
       await transport.connect();
       setConnectedState(true, transport.deviceName);
       const deviceId = transport.deviceId;
@@ -215,4 +241,16 @@ export function initializeBluetoothUi(
   });
 
   controller.log(readyMessage);
+
+  const getConnectionState = getNativeConnectionState();
+  if (getConnectionState) {
+    void getConnectionState()
+      .then((state) => {
+        if (state.connected) {
+          return controller.connect();
+        }
+        return undefined;
+      })
+      .catch(() => undefined);
+  }
 }
